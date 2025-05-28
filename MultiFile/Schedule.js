@@ -17,10 +17,10 @@ for (let time = startHour; time < endHour; time += increment) {
 function formatTime(h) {
   const hour = Math.floor(h);
   const minutes = h % 1 === 0 ? "00" : "30";
-  const period = h >= 12 ? "pm" : "am";
   const adjusted = hour > 12 ? hour - 12 : hour;
-  return `${adjusted}:${minutes}${period}`;
+  return `${adjusted}:${minutes}`;
 }
+
 
 // Toggle state: true = show through 5pm, false = show through 7pm
 let showThrough5pm = false;
