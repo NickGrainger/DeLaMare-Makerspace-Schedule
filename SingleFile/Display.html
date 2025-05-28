@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Machine Booking Grid</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 225px 20px 20px 20px;
+      background-color: #f9f9f9;
+      margin: 0;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+    }
+
+    .grid {
+    display: grid;
+    height: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+    }
+
+    .grid-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  overflow-y: auto;
+}
+
+#bookingGrid {
+  display: grid;
+  gap: 2px;
+}
+
+    .grid-header,
+    .grid-cell{
+        text-align: center;
+  padding: 10px;
+  min-width: 55px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  font-size: 12px;
+    }
+    .machine-name {
+      border: 1px solid #ccc;
+      padding: 3px;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .machine-name {
+      font-weight: bold;
+      background-color: #f0f0f0;
+      word-wrap: break-word;
+    }
+
+    .slot {
+      background-color: #041E42;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      user-select: none;
+    }
+
+    .slot.available {
+  background-color: #041E42;
+}
+
+.slot.unavailable {
+  background-color: #a5a5a5;
+}
+
+.slot.AppointmentOnly {
+  background-color: #94add3;
+  color: black;
+}
+
+.slot.PublicEvent {
+  background-color: #56276f;
+}
+
+.slot.ClassPrivateEvent {
+  background-color: #444444;
+}
+
+    .page-header {
+    background-color: #041E42; /* UNR Blue */
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    margin: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    }
+
+    .page-header img.university-logo {
+    display: block;
+    margin: 0 auto 10px auto;
+    }
+
+    .container {
+    display: flex;
+    gap: 20px;
+    height: auto; /* Full height minus header height */
+    box-sizing: border-box;
+    padding-right: 20px;
+      overflow-y: auto; /* Allow vertical scrolling */
+    }
+
+    #bookingGrid {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    overflow: auto; /* Scroll internally if absolutely needed */
+    }
+
+    .legend-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 10px;
+  margin-top: 0px;
+  align-items: center;
+}
+
+.legend-card {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.legend-card.available {
+  background-color: #041E42; /* UNR Blue */
+}
+
+.legend-card.unavailable {
+  background-color: #a5a5a5; /* grey */
+}
+
+.legend-card.AppointmentOnly {
+  background-color: #94add3; /* light blue */
+}
+
+.legend-card.PublicEvent {
+  background-color: #56276f; /* dark purple */
+}
+
+.legend-card.ClassPrivateEvent {
+  background-color: #444444; /* dark grey */
+}
+  .queue-panel {
+    width: 200px;
+    flex-shrink: 0;      /* Prevent shrinking */
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 15px;
+    font-size: 14px;
+    color: #041E42;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    height: calc(100vh - 265px); /* full height minus header and padding */
+    overflow-y: auto;
+    position: left;
+    top: 225px; /* below fixed header */
+  }
+
+  .queue-panel h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-weight: bold;
+    border-bottom: 2px solid #041E42;
+    padding-bottom: 5px;
+  }
+
+.queue-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.queue-card {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #e6ecf5;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  font-size: 13px;
+  color: #041E42;
+  height: 30px;
+  box-sizing: border-box;
+}
+
+.queue-card > div {
+  /* the leftGroup container */
+  display: flex;
+  align-items: center;
+  gap: 10px; /* space between drag handle and name */
+}
+
+.delete-btn {
+  margin-left: auto; /* push delete button all the way to the right */
+  background: none;
+  border: none;
+  color: #888888;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  line-height: 1;
+  transform: scale(1.2);
+  position: relative;
+  top: 1px;
+}
+
+.delete-btn:hover {
+  color: #888888;
+}
+  
+.drag-handle {
+  cursor: grab;
+  font-size: 20px;
+  margin-right: 10px;
+  user-select: none;
+  color: #041E42;
+  display: flex;
+  align-items: center;
+}
+.queue-card.dragging .drag-handle {
+  cursor: grabbing;
+}
+
+#clearButton {
+  margin-top: 20vh;
+  padding: 10px 20px;
+  background-color: #041E42;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: background-color 0.3s;
+  align-self: flex-start; /* or center if preferred */
+}
+
+#clearButton:hover {
+  background-color: #06376f;
+}
+
+.action-button {
+    margin-top: 20vh;
+  padding: 10px 20px;
+  background-color: #041E42;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: background-color 0.3s;
+  align-self: flex-start;
+}
+
+.action-button:hover {
+  background-color: #06376f;
+}
+
+.button-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 0px;
+  align-items: flex-start;
+}
+
+.button-form-row {
+    margin-top: 20vh;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* The switch - the container */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+  vertical-align: middle;
+  margin-left: 10px;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #041E42; /* UNR blue */
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.time-toggle-container {
+  display: flex;
+  align-items: center; /* Align vertically */
+  gap: 10px; /* Space between elements */
+  margin-top: 20vh; /* Same vertical spacing as buttons */
+  font-size: 14px;
+}
+
+  </style>
+</head>
+<body>
+
+<header class="page-header">
+  <img
+    class="university-logo"
+    alt="University of Nevada, Reno Homepage"
+    src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg"
+    width="65"
+    height="65"
+  >
+  <h1>DeLaMare Library Makerspace Schedule</h1>
+</header>
+
+<div class="container">
+<div class="grid-wrapper">
+    <div class="legend-row">
+        <div style="display: flex; align-items: center; gap: 8px;">
+  <div class="legend-card available"></div>
+    <span>Available</span>
+  </div>
+  <div style="display: flex; align-items: center; gap: 8px;">
+  <div class="legend-card unavailable"></div>
+    <span>Unavailable</span>
+  </div>
+    <div style="display: flex; align-items: center; gap: 8px;">
+  <div class="legend-card AppointmentOnly"></div>
+    <span>Appointment Only: No Walk-ins</span>
+  </div>
+    <div style="display: flex; align-items: center; gap: 8px;">
+  <div class="legend-card PublicEvent"></div>
+    <span>Public Event</span>
+  </div>
+    <div style="display: flex; align-items: center; gap: 8px;">
+  <div class="legend-card ClassPrivateEvent"></div>
+    <span>Class/Private Event</span>
+  </div>
+      <span>To book a tool or wrangler, visit the DeLaMare Library Makerspace webpage</span>
+
+</div>
+
+  <div class="grid" id="bookingGrid"></div>
+  <div class="button-form-row">
+
+    <div class="time-toggle-container">
+  <label for="timeToggle">7:00pm Closing</label>
+  <label class="switch">
+    <input type="checkbox" id="timeToggle" />
+    <span class="slider"></span>
+  </label>
+  <span>5:00pm Closing</span>
+</div>
+
+  <div class="button-row">
+    <button id="clearButton">Clear Bookings</button>
+    <button class="action-button" onclick="toggleAddForm()">Add Print</button>
+  </div>
+
+  <div id="addForm" style="display: none;">
+    <input type="text" id="newPrintName" placeholder="Example: #1234" style="width: 200px; padding: 4px; margin-left: 8px;">
+    <button class="action-button" onclick="addNewPrint()">Add</button>
+  </div>
+</div>
+</div>
+
+    <aside class="queue-panel">
+    <h2>3D Printing Queue</h2>
+    <ol class="queue-list" id="printingQueue" draggable="true">
+        <!-- JS will populate this list -->
+    </ol>
+    <p style="margin-top: 20px; font-size: 12px; color: #555;">
+        <strong>Please Note:</strong> Our 3D Printing Queue operates
+        on a first-come, first-served basis, but also prioritizes 
+        University-Related and Academic prints. Timelines are uncertain 
+        and dependent on available downtime of Maker Wranglers, 
+        failed print occurrences, and 3D printer availability and 
+        functionality. Please plan and submit 3D print orders proactively 
+        to ensure completion by your deadline.
+    </p>
+    </aside>
+
+</div>
+
+  <script>
+  const startHour = 8.0;
+  const endHour = 19.0;
+  const increment = 0.5;
+  const machines = [
+    "Maker Wrangler", "Maker Wrangler: 3D Modeling", "3D Scanner: Leo", "3D Scanner: Spider", "Laser Cutter: Dremel",
+    "Laser Cutter: Epilog", "Vinyl Cutter: 48 inch", "Vinyl Cutter: 24 inch", "Vacuum Former", "Router: Shaper Origin",
+    "Router: CNC", "Embroidery Machine", "PCB Milling Machine", "Audio Recording Booth"
+  ];
+
+  // Full time slots from start to end
+  const fullTimeSlots = [];
+  for (let time = startHour; time < endHour; time += increment) {
+    fullTimeSlots.push(time);
+  }
+
+  // Format time helper
+  function formatTime(h) {
+    const hour = Math.floor(h);
+    const minutes = h % 1 === 0 ? "00" : "30";
+    const period = h >= 12 ? "pm" : "am";
+    const adjusted = hour > 12 ? hour - 12 : hour;
+    return `${adjusted}:${minutes}${period}`;
+  }
+
+  // Toggle state: true = show through 5pm, false = show through 7pm
+  let showThrough5pm = false;
+
+  // Current time slots shown, initialized to show through 7pm
+  let timeSlots = [];
+
+  function updateTimeSlots() {
+    const cutoff = showThrough5pm ? 17 : 19; // 5pm = 17, 7pm = 19
+    timeSlots = fullTimeSlots.filter(t => t <= cutoff);
+  }
+
+  function buildGrid() {
+  updateTimeSlots();
+
+  const grid = document.getElementById('bookingGrid');
+  grid.innerHTML = ''; // clear previous grid
+
+  grid.style.gridTemplateColumns = `125px repeat(${timeSlots.length}, 1fr)`;
+
+  // First row: blank + time headers
+  const headerBlank = document.createElement('div');
+  headerBlank.className = 'grid-header';
+  grid.appendChild(headerBlank);
+
+  timeSlots.forEach(time => {
+    const header = document.createElement('div');
+    header.className = 'grid-header';
+    header.textContent = formatTime(time);
+    grid.appendChild(header);
+  });
+
+  // Define class state order
+  const states = [
+    'available',
+    'unavailable',
+    'AppointmentOnly',
+    'PublicEvent',
+    'ClassPrivateEvent'
+  ];
+
+  // List of machines that should default to AppointmentOnly (light blue)
+  const appointmentOnlyMachines = [
+    "Embroidery Machine",
+    "Maker Wrangler: 3D Modeling",
+    "3D Scanner: Spider",
+    "3D Scanner: Leo",
+    "Router: CNC",
+    "Maker Wrangler",
+    "PCB Milling Machine"
+  ];
+
+  // Machine rows
+  machines.forEach(machine => {
+    // Machine name cell
+    const nameCell = document.createElement('div');
+    nameCell.className = 'machine-name';
+    nameCell.textContent = machine;
+    grid.appendChild(nameCell);
+
+    // Booking cells for each time slot
+    timeSlots.forEach(() => {
+      const cell = document.createElement('div');
+      cell.classList.add('grid-cell', 'slot');
+
+      // Set initial state based on machine type
+      const initialState = appointmentOnlyMachines.includes(machine) ? 'AppointmentOnly' : 'available';
+      cell.classList.add(initialState);
+
+      // Click cycle logic
+      cell.addEventListener('click', () => {
+        let currentStateIndex = states.findIndex(state => cell.classList.contains(state));
+        if (currentStateIndex === -1) currentStateIndex = 0;
+
+        // Remove current state
+        cell.classList.remove(states[currentStateIndex]);
+
+        // Add next state
+        const nextStateIndex = (currentStateIndex + 1) % states.length;
+        cell.classList.add(states[nextStateIndex]);
+      });
+
+      grid.appendChild(cell);
+    });
+  });
+}
+
+const timeToggle = document.getElementById('timeToggle');
+
+function updateTimeSlots() {
+  const cutoff = showThrough5pm ? 17 : 19; // 5pm or 7pm cutoff
+  timeSlots = fullTimeSlots.filter(t => t <= cutoff);
+}
+
+// Listen for slider changes
+timeToggle.addEventListener('change', () => {
+  showThrough5pm = timeToggle.checked;
+  buildGrid();
+});
+
+// Initial setup
+document.addEventListener('DOMContentLoaded', () => {
+  buildGrid();
+  populateQueue();
+});
+
+  // --- Printing queue code unchanged ---
+  const queueNames = [
+    "Example: #1234",
+    "Example: #5678",
+    "Example: #7654"
+  ];
+
+  function makeQueueReorderable() {
+    const list = document.getElementById('printingQueue');
+    let draggedItem = null;
+
+    list.querySelectorAll('.queue-card').forEach(card => {
+      card.addEventListener('dragstart', e => {
+        draggedItem = card;
+        card.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+
+      card.addEventListener('dragend', () => {
+        draggedItem = null;
+        card.classList.remove('dragging');
+      });
+
+      card.addEventListener('dragover', e => {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+      });
+
+      card.addEventListener('drop', e => {
+        e.preventDefault();
+        if (draggedItem && draggedItem !== card) {
+          const rect = card.getBoundingClientRect();
+          const offset = e.clientY - rect.top;
+          const half = rect.height / 2;
+          if (offset < half) {
+            card.parentNode.insertBefore(draggedItem, card);
+          } else {
+            card.parentNode.insertBefore(draggedItem, card.nextSibling);
+          }
+        }
+      });
+    });
+  }
+
+  function toggleAddForm() {
+    const form = document.getElementById('addForm');
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+  }
+
+function populateQueue() {
+  const queueList = document.getElementById('printingQueue');
+  queueList.innerHTML = ''; // clear first
+
+  queueNames.forEach((name, index) => {
+    const card = document.createElement('li');
+    card.className = 'queue-card';
+    card.draggable = true;
+
+    const handle = document.createElement('span');
+    handle.className = 'drag-handle';
+    handle.textContent = '☰'; // Unicode triple bar
+
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'name';
+    nameSpan.textContent = name;
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.textContent = '−';
+    deleteBtn.addEventListener('click', () => {
+      queueNames.splice(index, 1); //Remove from the array
+      populateQueue();             //Re-render queue
+    });
+
+    const leftGroup = document.createElement('div');
+    leftGroup.style.display = 'flex';
+    leftGroup.style.alignItems = 'center';
+    leftGroup.style.gap = '10px';
+
+    leftGroup.appendChild(handle);
+    leftGroup.appendChild(nameSpan);
+
+    card.appendChild(leftGroup);
+    card.appendChild(deleteBtn);
+
+    queueList.appendChild(card);
+  });
+
+  makeQueueReorderable();
+}
+
+function addNewPrint() {
+  const input = document.getElementById('newPrintName');
+  const name = input.value.trim();
+  if (name === '') return;
+
+  queueNames.push(name);    // Add to array
+  populateQueue();          // Re-render list
+  input.value = '';
+  document.getElementById('addForm').style.display = 'none';
+}
+
+
+document.getElementById('clearButton').addEventListener('click', () => {
+  const appointmentOnlyMachines = [
+    "Embroidery Machine",
+    "Maker Wrangler: 3D Modeling",
+    "3D Scanner: Spider",
+    "3D Scanner: Leo",
+    "Router: CNC",
+    "Maker Wrangler",
+    "PCB Milling Machine"
+  ];
+
+  // Get all rows (machines) from the grid
+  const grid = document.getElementById('bookingGrid');
+  const children = Array.from(grid.children);
+  const columnsPerRow = timeSlots.length + 1; // timeSlots + machine name column
+
+  for (let rowIndex = 0; rowIndex < machines.length; rowIndex++) {
+    const machine = machines[rowIndex];
+    const isAppointmentOnly = appointmentOnlyMachines.includes(machine);
+
+    for (let colIndex = 1; colIndex <= timeSlots.length; colIndex++) {
+      const cellIndex = (rowIndex + 1) * columnsPerRow + colIndex;
+      const cell = children[cellIndex];
+      if (!cell || !cell.classList.contains('slot')) continue;
+
+      // Remove all state classes
+      cell.classList.remove('available', 'unavailable', 'AppointmentOnly', 'PublicEvent', 'ClassPrivateEvent');
+
+      // Reassign default state
+      cell.classList.add(isAppointmentOnly ? 'AppointmentOnly' : 'available');
+    }
+  }
+});
+
+  // Initialize everything on page load
+  document.addEventListener('DOMContentLoaded', () => {
+    // Set toggle button text initial state
+    const toggleBtn = document.getElementById('toggleTimeButton');
+    if (toggleBtn) {
+      toggleBtn.textContent = "Show through 5'O Clock";
+    }
+    buildGrid();
+    populateQueue();
+  });
+</script>
+
+
+</body>
+</html>

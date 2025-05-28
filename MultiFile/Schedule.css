@@ -1,0 +1,327 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 225px 20px 20px 20px;
+  background-color: #f9f9f9;
+  margin: 0;
+}
+
+h1 {
+  margin-bottom: 30px;
+}
+
+.grid {
+  display: grid;
+  height: 100%;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.grid-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  overflow-y: auto;
+}
+
+#bookingGrid {
+  display: grid;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  overflow: auto;
+}
+
+.grid-header,
+.grid-cell {
+  text-align: center;
+  padding: 10px;
+  min-width: 55px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  font-size: 12px;
+}
+
+.machine-name {
+  border: 1px solid #ccc;
+  padding: 3px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: #f0f0f0;
+  word-wrap: break-word;
+}
+
+.slot {
+  background-color: #041E42;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  user-select: none;
+}
+
+.slot.available {
+  background-color: #041E42;
+}
+
+.slot.unavailable {
+  background-color: #a5a5a5;
+}
+
+.slot.AppointmentOnly {
+  background-color: #94add3;
+  color: black;
+}
+
+.slot.PublicEvent {
+  background-color: #56276f;
+}
+
+.slot.ClassPrivateEvent {
+  background-color: #444444;
+}
+
+.page-header {
+  background-color: #041E42;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+  margin: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.page-header img.university-logo {
+  display: block;
+  margin: 0 auto 10px auto;
+}
+
+.container {
+  display: flex;
+  gap: 20px;
+  height: auto;
+  box-sizing: border-box;
+  padding-right: 20px;
+  overflow-y: auto;
+}
+
+.legend-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 10px;
+  margin-top: 0;
+  align-items: center;
+}
+
+.legend-card {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  display: inline-block;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.legend-card.available {
+  background-color: #041E42;
+}
+
+.legend-card.unavailable {
+  background-color: #a5a5a5;
+}
+
+.legend-card.AppointmentOnly {
+  background-color: #94add3;
+}
+
+.legend-card.PublicEvent {
+  background-color: #56276f;
+}
+
+.legend-card.ClassPrivateEvent {
+  background-color: #444444;
+}
+
+.queue-panel {
+  width: 200px;
+  flex-shrink: 0;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 15px;
+  font-size: 14px;
+  color: #041E42;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  height: calc(100vh - 265px);
+  overflow-y: auto;
+  position: left;
+  top: 225px;
+}
+
+.queue-panel h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-weight: bold;
+  border-bottom: 2px solid #041E42;
+  padding-bottom: 5px;
+}
+
+.queue-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.queue-card {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #e6ecf5;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  font-size: 13px;
+  color: #041E42;
+  height: 30px;
+  box-sizing: border-box;
+}
+
+.queue-card > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.delete-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: #888888;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  line-height: 1;
+  transform: scale(1.2);
+  position: relative;
+  top: 1px;
+}
+
+.delete-btn:hover {
+  color: #888888;
+}
+
+.drag-handle {
+  cursor: grab;
+  font-size: 20px;
+  margin-right: 10px;
+  user-select: none;
+  color: #041E42;
+  display: flex;
+  align-items: center;
+}
+
+.queue-card.dragging .drag-handle {
+  cursor: grabbing;
+}
+
+#clearButton,
+.action-button {
+  margin-top: 20vh;
+  padding: 10px 20px;
+  background-color: #041E42;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s;
+  align-self: flex-start;
+}
+
+#clearButton:hover,
+.action-button:hover {
+  background-color: #06376f;
+}
+
+.button-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 0px;
+  align-items: flex-start;
+}
+
+.button-form-row {
+  margin-top: 20vh;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+  vertical-align: middle;
+  margin-left: 10px;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 24px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #041E42;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.time-toggle-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20vh;
+  font-size: 14px;
+}

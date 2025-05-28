@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Machine Booking Grid</title>
+  <link rel="stylesheet" href="Schedule.css" />
+</head>
+<body>
+<header class="page-header">
+  <img
+    class="university-logo"
+    alt="University of Nevada, Reno Homepage"
+    src="https://www.unr.edu/Assets/Icons/logos/university-logo.svg"
+    width="65"
+    height="65"
+  />
+  <h1>DeLaMare Library Makerspace Schedule</h1>
+</header>
+
+<div class="container">
+  <div class="grid-wrapper">
+    <div class="legend-row">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="legend-card available"></div>
+        <span>Available</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="legend-card unavailable"></div>
+        <span>Unavailable</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="legend-card AppointmentOnly"></div>
+        <span>Appointment Only: No Walk-ins</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="legend-card PublicEvent"></div>
+        <span>Public Event</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div class="legend-card ClassPrivateEvent"></div>
+        <span>Class/Private Event</span>
+      </div>
+      <span>To book a tool or wrangler, visit the DeLaMare Library Makerspace webpage</span>
+    </div>
+
+    <div class="grid" id="bookingGrid"></div>
+
+    <div class="button-form-row">
+      <div class="time-toggle-container">
+        <label for="timeToggle">7:00pm Closing</label>
+        <label class="switch">
+          <input type="checkbox" id="timeToggle" />
+          <span class="slider"></span>
+        </label>
+        <span>5:00pm Closing</span>
+      </div>
+
+      <div class="button-row">
+        <button id="clearButton">Clear Bookings</button>
+        <button class="action-button" onclick="toggleAddForm()">Add Print</button>
+      </div>
+
+      <div id="addForm" style="display: none;">
+        <input
+          type="text"
+          id="newPrintName"
+          placeholder="Example: #1234"
+          style="width: 200px; padding: 4px; margin-left: 8px;"
+        />
+        <button class="action-button" onclick="addNewPrint()">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <aside class="queue-panel">
+    <h2>3D Printing Queue</h2>
+    <ol class="queue-list" id="printingQueue" draggable="true">
+      <!-- JS will populate this list -->
+    </ol>
+    <p style="margin-top: 20px; font-size: 12px; color: #555;">
+      <strong>Please Note:</strong> Our 3D Printing Queue operates
+      on a first-come, first-served basis, but also prioritizes
+      University-Related and Academic prints. Timelines are uncertain
+      and dependent on available downtime of Maker Wranglers,
+      failed print occurrences, and 3D printer availability and
+      functionality. Please plan and submit 3D print orders proactively
+      to ensure completion by your deadline.
+    </p>
+  </aside>
+</div>
+
+<script src="Schedule.js"></script>
+</body>
+</html>
