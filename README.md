@@ -34,5 +34,6 @@ This project is developed specifically for the UNR DeLaMare Library Makerspace t
 
 ### Contact
 For questions or contributions, please contact the Makerspace staff at the University of Nevada, Reno.
+Please note that the single file version of this project is no longer up to date. It still works, but is an older version.
 
 ---
