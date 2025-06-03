@@ -68,12 +68,15 @@ function buildGrid() {
     nameCell.textContent = machine;
     grid.appendChild(nameCell);
 
+    const rowCells = []; // Store row cells for this machine
+
     timeSlots.forEach(() => {
       const cell = document.createElement('div');
       cell.classList.add('grid-cell', 'slot');
 
       const initialState = appointmentOnlyMachines.includes(machine) ? 'AppointmentOnly' : 'available';
       cell.classList.add(initialState);
+      rowCells.push(cell); // Track the cell
 
       cell.addEventListener('click', () => {
         let currentStateIndex = states.findIndex(state => cell.classList.contains(state));
@@ -84,6 +87,18 @@ function buildGrid() {
       });
 
       grid.appendChild(cell);
+    });
+
+    // When machine name is clicked, cycle the entire row's state
+    nameCell.addEventListener('click', () => {
+      let currentStateIndex = states.findIndex(state => rowCells[0].classList.contains(state));
+      if (currentStateIndex === -1) currentStateIndex = 0;
+      const nextStateIndex = (currentStateIndex + 1) % states.length;
+
+      rowCells.forEach(cell => {
+        states.forEach(state => cell.classList.remove(state));
+        cell.classList.add(states[nextStateIndex]);
+      });
     });
   });
 }
