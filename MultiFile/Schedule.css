@@ -46,7 +46,7 @@ h1 {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  border: 1px solid #ddd;
+  border: 0px solid #ccc;
   font-size: 24px;
 }
 
@@ -63,7 +63,7 @@ h1 {
 .slot {
   background-color: #041E42;
   color: white;
-  border-radius: 5px;
+  border-radius: 0px;
   cursor: pointer;
   transition: background-color 0.3s;
   user-select: none;
