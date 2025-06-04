@@ -3,7 +3,7 @@ const endHour = 19.0;
 const increment = 0.5;
 const machines = [
   "Maker Wrangler", "Maker Wrangler: 3D Modeling", "3D Scanner: Leo", "3D Scanner: Spider", "Laser Cutter: Dremel",
-  "Laser Cutter: Epilog", "Vinyl Cutter: 48 inch", "Vinyl Cutter: 24 inch", "Vacuum Former", "Router: Shaper Origin",
+  "Laser Cutter: Epilog", "Vinyl Cutter: 48\"", "Vinyl Cutter: 24\"", "Vacuum Former", "Router: Shaper Origin",
   "Router: CNC", "Embroidery Machine", "PCB Milling Machine", "Audio Recording Booth"
 ];
 
@@ -37,7 +37,7 @@ function buildGrid() {
   updateTimeSlots();
   const grid = document.getElementById('bookingGrid');
   grid.innerHTML = '';
-  grid.style.gridTemplateColumns = `125px repeat(${timeSlots.length}, 1fr)`;
+  grid.style.gridTemplateColumns = `180px repeat(${timeSlots.length}, 1fr)`;
 
   const headerBlank = document.createElement('div');
   headerBlank.className = 'grid-header';

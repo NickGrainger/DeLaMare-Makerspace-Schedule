@@ -1,13 +1,14 @@
 body {
   font-family: Arial, sans-serif;
-  padding: 65px 0px 20px 20px;
+  padding: 80px 0px 10px 10px;
   background-color: #f9f9f9;
   margin: 0;
 }
 
 h1 {
-  margin-bottom: 10px;
-  margin-top: 10px;
+  margin-bottom: 5px;
+  margin-top: 0px;
+  font-size: 50px;
 }
 
 .grid {
@@ -28,7 +29,7 @@ h1 {
 
 #bookingGrid {
   display: grid;
-  gap: 2px;
+  gap: 1px;
   flex: 1;
   min-width: 0;
   height: 100%;
@@ -40,20 +41,20 @@ h1 {
   text-align: center;
   padding: 5px;
   min-width: 35px;
-  height: 40px;
+  height: 58px;
   display: flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
   border: 1px solid #ddd;
-  font-size: 14px;
+  font-size: 24px;
 }
 
 .machine-name {
   border: 1px solid #ccc;
   padding: 3px;
   text-align: left;
-  font-size: 14px;
+  font-size: 21px;
   font-weight: bold;
   background-color: #f0f0f0;
   word-wrap: break-word;
@@ -94,7 +95,6 @@ h1 {
   color: white;
   padding: 0px 0;
   text-align: center;
-  margin: 0;
   position: fixed;
   top: 0;
   left: 0;
@@ -114,16 +114,16 @@ h1 {
 
 .legend-row {
   display: flex;
-  gap: 15px;
-  margin-bottom: 5px;
+  gap: 10px;
+  margin-bottom: 10px;
   margin-top: 0;
   align-items: center;
 }
 
 .legend-card {
-  padding: 8px 15px;
+  padding: 15px 15px;
   border-radius: 4px;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: bold;
   color: white;
   display: inline-block;
@@ -131,7 +131,7 @@ h1 {
 }
 
 .legend-row span {
-  font-size: 14px;
+  font-size: 19px;
 }
 
 
@@ -162,10 +162,10 @@ h1 {
   border: 1px solid #ccc;
   border-radius: 6px;
   padding: 15px;
-  font-size: 12px;
+  font-size: 15px;
   color: #041E42;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  height: calc(100vh - 200px);
+  height: calc(100vh - 125px);
   overflow-y: auto;
   position: left;
   top: 225px;
@@ -176,7 +176,7 @@ h1 {
   margin-bottom: 15px;
   font-weight: bold;
   border-bottom: 2px solid #041E42;
-  padding-bottom: 5px;
+  padding-bottom: 0px;
 }
 
 .queue-list {
@@ -191,13 +191,13 @@ h1 {
 .queue-card {
   display: flex;
   align-items: center;
-  padding: 5px 10px;
+  padding: 0px 10px;
   background-color: #e6ecf5;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  font-size: 12px;
+  font-size: 16px;
   color: #041E42;
-  height: 25px;
+  height: 40px;
   box-sizing: border-box;
 }
 
@@ -212,7 +212,7 @@ h1 {
   background: none;
   border: none;
   color: #888888;
-  font-size: 20px;
+  font-size: 24px;
   cursor: pointer;
   padding: 0;
   display: flex;
@@ -231,12 +231,15 @@ h1 {
 
 .drag-handle {
   cursor: grab;
-  font-size: 20px;
-  margin-right: 10px;
+  font-size: 28px;
+  margin-right: 0px;
+  margin-top: 5px;
   user-select: none;
   color: #041E42;
   display: flex;
   align-items: center;
+  justify-content: center;
+
 }
 
 .queue-card.dragging .drag-handle {
@@ -251,7 +254,7 @@ h1 {
   color: white;
   border: none;
   border-radius: 5px;
-  font-size: 14px;
+  font-size: 18px;
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   transition: background-color 0.3s;
@@ -324,5 +327,5 @@ input:checked + .slider:before {
   align-items: center;
   gap: 10px;
   margin-top: 20vh;
-  font-size: 14px;
+  font-size: 18px;
 }
