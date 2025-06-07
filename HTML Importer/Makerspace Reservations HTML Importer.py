@@ -2,14 +2,18 @@
 #list of spaces (can add more if needed)
 spaces = ("*00: Maker Wrangler", "*00: Maker Wrangler: 3D Modeling", "*01", "*02", "*03", "*04", "*05", "*06", "*07", "*08", "*09", "*10", "*11", "*12")
 
+#file path to html file
+filePath = "HTML Importer/LibCal_ Print Bookings.html"
+
+#number of 30min intervals
+timeSlots = 26
+
 #dimensions of reservation table
-rows, cols = (len(spaces), 27)
+rows, cols = (len(spaces), timeSlots)
 
 #reservation table (initialized to all false)
 arr = [[False for i in range(cols)] for j in range(rows)]
 
-#file path to html file
-filePath = "HTML Importer/LibCal_ Print Bookings.html"
 
 #function extract_lines
 #input: path to html file; Output: list of strings; function: reads html code line by line, removes indentations, and stores results in a list
