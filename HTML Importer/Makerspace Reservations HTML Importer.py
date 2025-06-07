@@ -1,3 +1,11 @@
+#############################################
+#                                           #
+#   Makerspace Reservations HTML Importer   #
+#        Designed by Nathan Gomez           #
+#             copywrite 2025                #
+#                                           #
+#############################################
+
 #global vars
 #list of spaces (can add more if needed)
 spaces = ("*00: Maker Wrangler", "*00: Maker Wrangler: 3D Modeling", "*01", "*02", "*03", "*04", "*05", "*06", "*07", "*08", "*09", "*10", "*11", "*12")
