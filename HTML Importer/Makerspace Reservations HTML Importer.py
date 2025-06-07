@@ -1,3 +1,16 @@
+#global vars
+#list of spaces (can add more if needed)
+spaces = ("*00: Maker Wrangler", "*00: Maker Wrangler: 3D Modeling", "*01", "*02", "*03", "*04", "*05", "*06", "*07", "*08", "*09", "*10", "*11", "*12")
+
+#dimensions of reservation table
+rows, cols = (len(spaces), 27)
+
+#reservation table (initialized to all false)
+arr = [[False for i in range(cols)] for j in range(rows)]
+
+#file path to html file
+filePath = "HTML Importer/LibCal_ Print Bookings.html"
+
 #function extract_lines
 #input: path to html file; Output: list of strings; function: reads html code line by line, removes indentations, and stores results in a list
 def extract_lines(html_path):
@@ -122,6 +135,9 @@ def display_table(table, rows, cols):
 
         print("\n")
 
+#function prepareData
+#input: 2d array, string, int; output: none; function: helper function that prepares strings (that contain time information)
+#into a 3-tuple for load_data()
 def prepareData(table, tempStr, row):
     paddedStr = padding(tempStr)
     index = convert_to_table_index(paddedStr)
@@ -129,43 +145,39 @@ def prepareData(table, tempStr, row):
     prepData = prepData + index
     load_data(prepData, table)
 
-spaces = ("*00: Maker Wrangler", "*00: Maker Wrangler: 3D Modeling", "*01", "*02", "*03", "*04", "*05", "*06", "*07", "*08", "*09", "*10", "*11", "*12")
-rows, cols = (14, 27)
-arr = [[False for i in range(cols)] for j in range(rows)]
+def main():
+    lines = extract_lines(filePath)
+    parsed = parse_lines(lines)
 
-lines = extract_lines('HTML Importer/LibCal_ Print Bookings.html')
-parsed = parse_lines(lines)
+    print("\n")
+    print("Data extracted:")
+    print("---------------------------", end="")
+    for i in parsed:
+        for j in spaces:
+            if j in i:
+                print("\n")
+        print(i)
 
-print("\n")
-print("Data extracted:")
-print("---------------------------", end="")
-for i in parsed:
-    for j in spaces:
-        if j in i:
-            print("\n")
-    print(i)
+    parsedCounter = 0
+    machineIndex = 0
 
-parsedCounter = 0
-machineIndex = 0
+    for i in range(0, 13):
+        if(spaces[i] in parsed[parsedCounter]):
+            machineIndex = i
+            parsedCounter += 1
+            if(parsedCounter < len(parsed)):
+                tempStr = parsed[parsedCounter]
+                while(tempStr[0] != '*' and parsedCounter < len(parsed)-1):
+                    prepareData(arr, tempStr, i)
+                    tempStr = parsed[parsedCounter+1]
+                    parsedCounter += 1
+        
+    tempStr = parsed[parsedCounter]
+    prepareData(arr, tempStr, machineIndex)
 
-for i in range(0, 13):
-    if(spaces[i] in parsed[parsedCounter]):
-        machineIndex = i
-        parsedCounter += 1
-        if(parsedCounter < len(parsed)):
-            tempStr = parsed[parsedCounter]
-            while(tempStr[0] != '*' and parsedCounter < len(parsed)-1):
-                prepareData(arr, tempStr, i)
-                tempStr = parsed[parsedCounter+1]
-                parsedCounter += 1
-    
-tempStr = parsed[parsedCounter]
-prepareData(arr, tempStr, machineIndex)
+    print("\n")
+    print("Reservations Table:")
+    display_table(arr, rows, cols)
 
-print("\n")
-print("Reservations Table:")
-display_table(arr, rows, cols)
-
-
-
-
+if __name__=="__main__":
+    main()
