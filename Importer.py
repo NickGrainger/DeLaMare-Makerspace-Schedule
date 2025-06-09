@@ -11,7 +11,7 @@
 spaces = ("*00: Maker Wrangler", "*00: Maker Wrangler: 3D Modeling", "*01", "*02", "*03", "*04", "*05", "*06", "*07", "*08", "*09", "*10", "*11", "*12")
 
 #file path to html file
-filePath = "HTML Importer/LibCal_ Print Bookings.htm"
+filePath = "HTML Importer/LibCal_ Print Bookings.html"
 
 #number of 30min intervals
 timeSlots = 26
