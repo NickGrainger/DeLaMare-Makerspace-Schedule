@@ -6,12 +6,14 @@
 #                                           #
 #############################################
 
+import json
+
 #global vars
 #list of spaces (can add more if needed)
 spaces = ("*00: Maker Wrangler", "*00: Maker Wrangler: 3D Modeling", "*01", "*02", "*03", "*04", "*05", "*06", "*07", "*08", "*09", "*10", "*11", "*12")
 
 #file path to html file
-filePath = "HTML Importer/LibCal_ Print Bookings.htm"
+filePath = "HTML Importer/LibCal_ Print Bookings.html"
 
 #number of 30min intervals
 timeSlots = 26
@@ -22,6 +24,22 @@ rows, cols = (len(spaces), timeSlots)
 #reservation table (initialized to all false)
 arr = [[False for i in range(cols)] for j in range(rows)]
 
+def export_to_js_variable(table, spaces, filepath="MultiFile/bookings.js"):
+    output = {}
+    for row_index, space in enumerate(spaces):
+        space_key = space.replace("*", "")
+        output[space_key] = []
+        for col_index, is_reserved in enumerate(table[row_index]):
+            if is_reserved:
+                output[space_key].append(col_index)
+
+    js_string = "const bookings = " + json.dumps(output, indent=2) + ";"
+    with open(filepath, "w") as f:
+        f.write(js_string)
+
+    # Optional backup
+    with open("bookings.js", "w") as f:
+        f.write(js_string)
 
 #function extract_lines
 #input: path to html file; Output: list of strings; function: reads html code line by line, removes indentations, and stores results in a list
@@ -161,8 +179,7 @@ def main():
     lines = extract_lines(filePath)
     parsed = parse_lines(lines)
 
-    print("\n")
-    print("Data extracted:")
+    print("\nData extracted:")
     print("---------------------------", end="")
     for i in parsed:
         for j in spaces:
@@ -183,13 +200,49 @@ def main():
                     prepareData(arr, tempStr, i)
                     tempStr = parsed[parsedCounter+1]
                     parsedCounter += 1
-        
+
     tempStr = parsed[parsedCounter]
     prepareData(arr, tempStr, machineIndex)
 
-    print("\n")
-    print("Reservations Table:")
+    print("\nReservations Table:")
     display_table(arr, rows, cols)
+
+    export_to_js_variable(arr, spaces)  # ✅ THIS is now defined and called properly
+
+def main():
+    lines = extract_lines(filePath)
+    parsed = parse_lines(lines)
+
+    print("\nData extracted:")
+    print("---------------------------", end="")
+    for i in parsed:
+        for j in spaces:
+            if j in i:
+                print("\n")
+        print(i)
+
+    parsedCounter = 0
+    machineIndex = 0
+
+    for i in range(0, 13):
+        if(spaces[i] in parsed[parsedCounter]):
+            machineIndex = i
+            parsedCounter += 1
+            if(parsedCounter < len(parsed)):
+                tempStr = parsed[parsedCounter]
+                while(tempStr[0] != '*' and parsedCounter < len(parsed)-1):
+                    prepareData(arr, tempStr, i)
+                    tempStr = parsed[parsedCounter+1]
+                    parsedCounter += 1
+
+    tempStr = parsed[parsedCounter]
+    prepareData(arr, tempStr, machineIndex)
+
+    print("\nReservations Table:")
+    display_table(arr, rows, cols)
+
+    export_to_js_variable(arr, spaces)
+
 
 if __name__=="__main__":
     main()

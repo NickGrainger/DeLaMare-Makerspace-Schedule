@@ -46,43 +46,6 @@ function buildGrid() {
   headerBlank.className = 'grid-header';
   grid.appendChild(headerBlank);
 
-
-  timeSlots.forEach((time, timeIndex) => {
-  const header = document.createElement('div');
-  header.className = 'grid-header';
-  header.textContent = formatTime(time);
-
-  // Add column click behavior
-  header.addEventListener('click', () => {
-    const columnsPerRow = timeSlots.length + 1;
-    const gridChildren = Array.from(grid.children);
-    const states = ['available', 'unavailable', 'AppointmentOnly', 'PublicEvent', 'ClassPrivateEvent'];
-
-    // First machine row starts at index = machines.length (because headers come first)
-    let columnCells = [];
-    for (let rowIndex = 0; rowIndex < machines.length; rowIndex++) {
-      const cellIndex = (rowIndex + 1) * columnsPerRow + (timeIndex + 1);
-      const cell = gridChildren[cellIndex];
-      if (cell && cell.classList.contains('slot')) {
-        columnCells.push(cell);
-      }
-    }
-
-    // Determine the current state based on the first cell in the column
-    let currentStateIndex = states.findIndex(state => columnCells[0].classList.contains(state));
-    if (currentStateIndex === -1) currentStateIndex = 0;
-    const nextStateIndex = (currentStateIndex + 1) % states.length;
-
-    // Apply the next state to all cells in the column
-    columnCells.forEach(cell => {
-      states.forEach(state => cell.classList.remove(state));
-      cell.classList.add(states[nextStateIndex]);
-    });
-  });
-
-  grid.appendChild(header);
-});
-
   const states = ['available', 'unavailable', 'AppointmentOnly', 'PublicEvent', 'ClassPrivateEvent'];
 
   const appointmentOnlyMachines = [
@@ -95,13 +58,46 @@ function buildGrid() {
     "PCB Milling Machine"
   ];
 
+  // Time headers
+  timeSlots.forEach((time, timeIndex) => {
+    const header = document.createElement('div');
+    header.className = 'grid-header';
+    header.textContent = formatTime(time);
+
+    header.addEventListener('click', () => {
+      const columnsPerRow = timeSlots.length + 1;
+      const gridChildren = Array.from(grid.children);
+      let columnCells = [];
+
+      for (let rowIndex = 0; rowIndex < machines.length; rowIndex++) {
+        const cellIndex = (rowIndex + 1) * columnsPerRow + (timeIndex + 1);
+        const cell = gridChildren[cellIndex];
+        if (cell && cell.classList.contains('slot')) {
+          columnCells.push(cell);
+        }
+      }
+
+      let currentStateIndex = states.findIndex(state => columnCells[0].classList.contains(state));
+      if (currentStateIndex === -1) currentStateIndex = 0;
+      const nextStateIndex = (currentStateIndex + 1) % states.length;
+
+      columnCells.forEach(cell => {
+        states.forEach(state => cell.classList.remove(state));
+        cell.classList.add(states[nextStateIndex]);
+      });
+    });
+
+    grid.appendChild(header);
+  });
+
+  // Grid cells
   machines.forEach(machine => {
     const nameCell = document.createElement('div');
     nameCell.className = 'machine-name';
     nameCell.textContent = machine;
     grid.appendChild(nameCell);
 
-    const rowCells = []; // Store row cells for this machine
+    const rowCells = [];
 
     timeSlots.forEach(() => {
       const cell = document.createElement('div');
@@ -109,7 +105,7 @@ function buildGrid() {
 
       const initialState = appointmentOnlyMachines.includes(machine) ? 'AppointmentOnly' : 'available';
       cell.classList.add(initialState);
-      rowCells.push(cell); // Track the cell
+      rowCells.push(cell);
 
       cell.addEventListener('click', () => {
         let currentStateIndex = states.findIndex(state => cell.classList.contains(state));
@@ -122,7 +118,6 @@ function buildGrid() {
       grid.appendChild(cell);
     });
 
-    // When machine name is clicked, cycle the entire row's state
     nameCell.addEventListener('click', () => {
       let currentStateIndex = states.findIndex(state => rowCells[0].classList.contains(state));
       if (currentStateIndex === -1) currentStateIndex = 0;
@@ -134,7 +129,28 @@ function buildGrid() {
       });
     });
   });
+
+  // ✅ APPLY BOOKINGS *AFTER* grid is fully populated
+  const machineIndexMap = {};
+  machines.forEach((m, i) => machineIndexMap[m] = i);
+
+  const columnsPerRow = timeSlots.length + 1;
+  const gridChildren = Array.from(grid.children);
+
+  for (const [machineName, colIndexes] of Object.entries(bookings)) {
+    if (!(machineName in machineIndexMap)) continue;
+    const row = machineIndexMap[machineName];
+    for (const col of colIndexes) {
+      const cellIndex = (row + 1) * columnsPerRow + (col + 1); // +1 for row/col headers
+      const cell = gridChildren[cellIndex];
+      if (cell && cell.classList.contains('slot')) {
+        cell.classList.remove('available', 'AppointmentOnly');
+        cell.classList.add('unavailable');
+      }
+    }
+  }
 }
+
 
 const timeToggle = document.getElementById('timeToggle');
 timeToggle.addEventListener('change', () => {
