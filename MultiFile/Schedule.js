@@ -1,3 +1,6 @@
+// Mary Cottier
+// June 2025
+
 const startHour = 8.0;
 const endHour = 19.0;
 const increment = 0.5;
@@ -43,12 +46,42 @@ function buildGrid() {
   headerBlank.className = 'grid-header';
   grid.appendChild(headerBlank);
 
-  timeSlots.forEach(time => {
-    const header = document.createElement('div');
-    header.className = 'grid-header';
-    header.textContent = formatTime(time);
-    grid.appendChild(header);
+
+  timeSlots.forEach((time, timeIndex) => {
+  const header = document.createElement('div');
+  header.className = 'grid-header';
+  header.textContent = formatTime(time);
+
+  // Add column click behavior
+  header.addEventListener('click', () => {
+    const columnsPerRow = timeSlots.length + 1;
+    const gridChildren = Array.from(grid.children);
+    const states = ['available', 'unavailable', 'AppointmentOnly', 'PublicEvent', 'ClassPrivateEvent'];
+
+    // First machine row starts at index = machines.length (because headers come first)
+    let columnCells = [];
+    for (let rowIndex = 0; rowIndex < machines.length; rowIndex++) {
+      const cellIndex = (rowIndex + 1) * columnsPerRow + (timeIndex + 1);
+      const cell = gridChildren[cellIndex];
+      if (cell && cell.classList.contains('slot')) {
+        columnCells.push(cell);
+      }
+    }
+
+    // Determine the current state based on the first cell in the column
+    let currentStateIndex = states.findIndex(state => columnCells[0].classList.contains(state));
+    if (currentStateIndex === -1) currentStateIndex = 0;
+    const nextStateIndex = (currentStateIndex + 1) % states.length;
+
+    // Apply the next state to all cells in the column
+    columnCells.forEach(cell => {
+      states.forEach(state => cell.classList.remove(state));
+      cell.classList.add(states[nextStateIndex]);
+    });
   });
+
+  grid.appendChild(header);
+});
 
   const states = ['available', 'unavailable', 'AppointmentOnly', 'PublicEvent', 'ClassPrivateEvent'];
 
