@@ -12,7 +12,7 @@ This project is a digital booking grid and queue system designed for the UNR DeL
 ## Future Plans
 Eventually, this project will be enhanced to:
 - Read booking data automatically from exported files from LibCal or directly from the LibCal Makerspace bookings webpage.
-- Automatically update the display based on live Makerspace bookings.
+- Automatically update the display based on live Makerspace bookings. Requires conversion of importer.py to JSON data first, then integration to the .js and .html files
 
 ## Project Context
 This project is developed specifically for the UNR DeLaMare Library Makerspace to provide a convenient, centralized digital display of machine availability and upcoming bookings. It will help Makerspace staff and users better coordinate use of resources.
@@ -34,6 +34,5 @@ This project is developed specifically for the UNR DeLaMare Library Makerspace t
 
 ### Contact
 For questions or contributions, please contact the Makerspace staff at the University of Nevada, Reno.
-Please note that the single file version of this project is no longer up to date. It still works, but is an older version.
 
 ---
