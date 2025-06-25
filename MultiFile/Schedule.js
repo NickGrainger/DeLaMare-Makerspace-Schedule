@@ -56,7 +56,7 @@ function buildGrid() {
   header.addEventListener('click', () => {
     const columnsPerRow = timeSlots.length + 1;
     const gridChildren = Array.from(grid.children);
-    const states = ['available', 'unavailable', 'AppointmentOnly', 'PublicEvent', 'ClassPrivateEvent'];
+    const states = ['available', 'AppointmentOnly', 'unavailable',  'PublicEvent', 'ClassPrivateEvent'];
 
     // First machine row starts at index = machines.length (because headers come first)
     let columnCells = [];
@@ -83,7 +83,7 @@ function buildGrid() {
   grid.appendChild(header);
 });
 
-  const states = ['available', 'unavailable', 'AppointmentOnly', 'PublicEvent', 'ClassPrivateEvent'];
+  const states = ['available', 'AppointmentOnly', 'unavailable',  'PublicEvent', 'ClassPrivateEvent'];
 
   const appointmentOnlyMachines = [
     "Embroidery Machine",
